@@ -22,10 +22,9 @@ public class client {
 	
     public static void doConnect() {
 
-        //Netty Ӧ�ó���ͨ������ bootstrap����������Ŀ�ʼ�������ṩ��һ�� ����Ӧ�ó�����������õ�������
         Bootstrap bootstrap = new Bootstrap();
 
-        //�������������߳���
+
         NioEventLoopGroup nioEventLoopGroup = new NioEventLoopGroup();
 
 
@@ -66,7 +65,7 @@ public class client {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-            doConnect(); // ��������
+            doConnect(); 
         }
     }
 
