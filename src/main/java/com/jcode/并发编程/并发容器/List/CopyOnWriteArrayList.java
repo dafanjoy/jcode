@@ -32,7 +32,7 @@
  * All rights reserved.
  */
 
-package java.util.concurrent;
+package com.jcode.并发编程.并发容器.List;
 import java.util.AbstractList;
 import java.util.ArrayList;
 import java.util.Arrays;

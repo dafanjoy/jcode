@@ -1,4 +1,4 @@
-package com.jcode.并发数据结构.List;
+package com.jcode.并发编程.并发容器.List;
 
 import java.util.ArrayList;
 import java.util.concurrent.CopyOnWriteArrayList;
