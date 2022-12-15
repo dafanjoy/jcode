@@ -497,7 +497,7 @@ public class CopyOnWriteArrayList<E>
             if (numMoved == 0)
                 setArray(Arrays.copyOf(elements, len - 1));
             else {
-                Object[] newElements = new Object[len - 1];
+                Object[] newElements = new Object[len - 1];//声明一个新数组
                 System.arraycopy(elements, 0, newElements, 0, index);
                 System.arraycopy(elements, index + 1, newElements, index,
                                  numMoved);
@@ -524,7 +524,7 @@ public class CopyOnWriteArrayList<E>
      */
     public boolean remove(Object o) {
         Object[] snapshot = getArray();
-        int index = indexOf(o, snapshot, 0, snapshot.length);
+        int index = indexOf(o, snapshot, 0, snapshot.length);//遍历数组定位元素下标
         return (index < 0) ? false : remove(o, snapshot, index);
     }
 
@@ -534,32 +534,33 @@ public class CopyOnWriteArrayList<E>
      */
     private boolean remove(Object o, Object[] snapshot, int index) {
         final ReentrantLock lock = this.lock;
-        lock.lock();
+        lock.lock();//加锁
         try {
             Object[] current = getArray();
             int len = current.length;
-            if (snapshot != current) findIndex: {
-                int prefix = Math.min(index, len);
-                for (int i = 0; i < prefix; i++) {
+            //以下这段代码保证数据线程安全，再次对数组是否发生改变进行判断，如果发生改变进行分段轮询，提高效率
+            if (snapshot != current) findIndex: {//这里判断数组是否已经被修改，如果有修改就重新定位下标
+                int prefix = Math.min(index, len);//取最小值
+                for (int i = 0; i < prefix; i++) {//提高效率先按最小循环次数遍历
                     if (current[i] != snapshot[i] && eq(o, current[i])) {
                         index = i;
                         break findIndex;
                     }
                 }
-                if (index >= len)
+                if (index >= len)//下标超过当前数组长度返回false
                     return false;
-                if (current[index] == o)
+                if (current[index] == o)//下标未改变，直接返回
                     break findIndex;
-                index = indexOf(o, current, index, len);
+                index = indexOf(o, current, index, len);//遍历剩余部分
                 if (index < 0)
                     return false;
             }
-            Object[] newElements = new Object[len - 1];
+            Object[] newElements = new Object[len - 1];//创建一个长度len - 1的数组，执行复制操作
             System.arraycopy(current, 0, newElements, 0, index);
             System.arraycopy(current, index + 1,
                              newElements, index,
                              len - index - 1);
-            setArray(newElements);
+            setArray(newElements);//覆盖原数组
             return true;
         } finally {
             lock.unlock();
