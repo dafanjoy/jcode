@@ -1,4 +1,4 @@
-package com.jcode.算法.压缩.gzip;
+package com.jcode.算法.压缩;
  
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -9,31 +9,23 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
  
 public class GZipTest {
-    public static String compress(String str) {
-        if (str == null || str.trim().length() == 0) {
-            return null;
-        }
- 
+    public static byte[] compress(byte[] inBytes) { 
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
              GZIPOutputStream gzip = new GZIPOutputStream(out)) {
-            gzip.write(str.getBytes("utf-8"));
+            gzip.write(inBytes);
             gzip.close();
  
-            return new String(out.toByteArray(), "iso-8859-1");
+            return out.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
-            return str;
+            return inBytes;
         }
  
     }
  
-    public static String uncompress(String str) {
-        if (str == null || str.trim().length() == 0) {
-            return null;
-        }
- 
+    public static byte[] uncompress(byte[] inBytes) {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-             ByteArrayInputStream in = new ByteArrayInputStream(str.getBytes("iso-8859-1"))){
+             ByteArrayInputStream in = new ByteArrayInputStream(inBytes)){
             GZIPInputStream ungzip = new GZIPInputStream(in);
             byte[] buffer = new byte[2048];
             int n;
@@ -41,10 +33,10 @@ public class GZipTest {
                 out.write(buffer, 0, n);
             }
  
-            return new String(out.toByteArray(), "utf-8");
+            return out.toByteArray();
         } catch (Exception e) {
             e.printStackTrace();
-            return str;
+            return inBytes;
         }
  
     }

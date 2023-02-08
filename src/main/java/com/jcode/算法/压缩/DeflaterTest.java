@@ -1,4 +1,4 @@
-package com.jcode.算法.压缩.gzip;
+package com.jcode.算法.压缩;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
@@ -10,8 +10,9 @@ import java.util.zip.Inflater;
 public class DeflaterTest {
 	/**
      * 压缩
+	 * @throws UnsupportedEncodingException 
      */
-    public static String compress(String unzipString) {
+    public static byte[] compress(byte[] inBytes) throws UnsupportedEncodingException {
         /**
          *     https://www.yiibai.com/javazip/javazip_deflater.html#article-start
          *     0 ~ 9 压缩等级 低到高
@@ -31,7 +32,7 @@ public class DeflaterTest {
         //使用指定的压缩级别创建一个新的压缩器。
         Deflater deflater = new Deflater(Deflater.BEST_COMPRESSION);
         //设置压缩输入数据。
-        deflater.setInput(unzipString.getBytes());
+        deflater.setInput(inBytes);
         //当被调用时，表示压缩应该以输入缓冲区的当前内容结束。
         deflater.finish();
 
@@ -45,28 +46,29 @@ public class DeflaterTest {
         }
         //关闭压缩器并丢弃任何未处理的输入。
         deflater.end();
-        return Base64.getEncoder().encodeToString(outputStream.toByteArray());
+        return outputStream.toByteArray();
     }
 
     /**
      * 解压缩
+     * @throws UnsupportedEncodingException 
      */
-    public static String uncompress(String zipString) {
-        byte[] decode = Base64.getDecoder().decode(zipString);
+    public static byte[] uncompress(byte[] inBytes) throws UnsupportedEncodingException {
+     
 
         //创建一个新的解压缩器  https://www.yiibai.com/javazip/javazip_inflater.html
 
         Inflater inflater = new Inflater();
         //设置解压缩的输入数据。
-        inflater.setInput(decode);
-        final byte[] bytes = new byte[256];
+        inflater.setInput(inBytes);
+        final byte[] buffer = new byte[256];
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(256);
         try {
             //finished() 如果已到达压缩数据流的末尾，则返回true。
             while (!inflater.finished()) {
                 //将字节解压缩到指定的缓冲区中。
-                int length = inflater.inflate(bytes);
-                outputStream.write(bytes, 0, length);
+                int length = inflater.inflate(buffer);
+                outputStream.write(buffer, 0, length);
             }
         } catch (DataFormatException e) {
             e.printStackTrace();
@@ -76,7 +78,7 @@ public class DeflaterTest {
             inflater.end();
         }
 
-        return outputStream.toString();
+        return outputStream.toByteArray();
     }
 
 }

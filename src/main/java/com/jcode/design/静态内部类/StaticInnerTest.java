@@ -1,4 +1,4 @@
-package com.jcode.design.静态内部类内部类;
+package com.jcode.design.静态内部类;
 
 public class StaticInnerTest {
 	public StaticInnerTest() {
