@@ -72,7 +72,7 @@ public class DsaCoder {
         byte[] sign = dsa.signature(msg.getBytes(), dsa.getPrivateKey());
         boolean flag = dsa.verify(msg.getBytes(), dsa.getPublicKey(), sign);
         String result = flag ? "数字签名匹配" : "数字签名不匹配";
-        System.out.println("数字签名：" + Base64.encodeBase64URLSafeString(sign));
+        System.out.println("数字签名：" +  Base64.encodeBase64URLSafeString(sign));
         System.out.println("验证结果：" + result);
     }
 }
