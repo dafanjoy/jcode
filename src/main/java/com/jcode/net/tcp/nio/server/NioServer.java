@@ -1,4 +1,4 @@
-package com.jcode.net.nio.server;
+package com.jcode.net.tcp.nio.server;
 
 import java.net.InetSocketAddress;
 import java.nio.channels.SelectionKey;
@@ -12,10 +12,6 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 public class NioServer {
-	
-	static ExecutorService executor = new ThreadPoolExecutor(2, 4, 1000, TimeUnit.SECONDS, new ArrayBlockingQueue<>(10),
-			new ThreadPoolExecutor.CallerRunsPolicy());
-
 	public static void main(String[] args) {
 		try {
 			// TODO Auto-generated method stub
@@ -38,7 +34,7 @@ public class NioServer {
 	            Iterator<SelectionKey> iterator = selectionKeys.iterator();
 	            while (iterator.hasNext()) {
 	                SelectionKey selectionKey = iterator.next();
-	                executor.execute(new NioServerHandler(serverSocketChannel, selectionKey));
+					new NioServerHandler(serverSocketChannel, selectionKey).handle();
 	            }
 	           selectionKeys.clear();
 	        }

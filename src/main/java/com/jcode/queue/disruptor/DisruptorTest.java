@@ -1,13 +1,7 @@
-package com.jcode.disruptor;
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+package com.jcode.queue.disruptor;
 
 import com.lmax.disruptor.BlockingWaitStrategy;
-import com.lmax.disruptor.BusySpinWaitStrategy;
-import com.lmax.disruptor.PhasedBackoffWaitStrategy;
 import com.lmax.disruptor.RingBuffer;
-import com.lmax.disruptor.YieldingWaitStrategy;
 import com.lmax.disruptor.dsl.Disruptor;
 import com.lmax.disruptor.dsl.ProducerType;
 import com.lmax.disruptor.util.DaemonThreadFactory;

@@ -1,4 +1,4 @@
-package com.jcode.net.nio.server;
+package com.jcode.net.tcp.nio.server;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
@@ -7,10 +7,9 @@ import java.nio.channels.SocketChannel;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-import com.google.common.io.ByteProcessor;
 import com.jcode.utils.BytesUtils;
 
-public class NioServerHandler implements Runnable {
+public class NioServerHandler {
 	
 	private ServerSocketChannel serverSocketChannel;
 	
@@ -21,11 +20,11 @@ public class NioServerHandler implements Runnable {
 		this.selectionKey=selectionKey;
 	}
 
-    public void run() {
+    public void handle() {
         ByteBuffer inputBuff = ByteBuffer.allocate(1024); // 分配读ByteBuffer
         ByteBuffer outputBuff = ByteBuffer.allocate(1024); // 分配写ByteBuffer
         try {
-            if (selectionKey.isAcceptable()) {
+            if (selectionKey.isAcceptable()) { //链接事件
                 SocketChannel socketChannel = serverSocketChannel.accept();
                 if (socketChannel == null) {
                     return;
@@ -34,7 +33,7 @@ public class NioServerHandler implements Runnable {
                 socketChannel.register(selectionKey.selector(), SelectionKey.OP_READ);
             }
 
-            if (selectionKey.isReadable()) {
+            if (selectionKey.isReadable()) {//读事件
                 SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
                 if (socketChannel == null) {
                     return;
@@ -52,24 +51,27 @@ public class NioServerHandler implements Runnable {
              
 				byte[] bytes = new byte[length];
 				System.arraycopy(inputBuff.array(), 0, bytes, 0, length);
-                
-                System.err.println( BytesUtils.toHexString(bytes));
+                String message = new String(bytes);
+                System.out.println("Received message: " + message);
+
                 socketChannel.register(selectionKey.selector(), SelectionKey.OP_WRITE);
-                selectionKey.selector().wakeup();
+                selectionKey.selector().wakeup();//唤醒选择器
             }
 
-            if (selectionKey.isWritable()) {
+            if (selectionKey.isWritable()) {//写事件
+                outputBuff.clear();
                 SocketChannel socketChannel = (SocketChannel) selectionKey.channel();
                 if (socketChannel == null) {
                     return;
                 }
-                String message = "Hello, Client. " + UUID.randomUUID();
+                String message = "Sent response: " + UUID.randomUUID();
+                System.err.println(message);
                 outputBuff.put(message.getBytes(StandardCharsets.UTF_8));
                 outputBuff.flip();
                 socketChannel.write(outputBuff);
 
                 socketChannel.register(selectionKey.selector(), SelectionKey.OP_READ);
-                selectionKey.selector().wakeup();
+                selectionKey.selector().wakeup();//唤醒选择器
             }
         } catch (Exception e) {
             e.printStackTrace();

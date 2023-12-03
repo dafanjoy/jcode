@@ -1,4 +1,4 @@
-package com.jcode.thread.Condition;
+package com.jcode.thread.condition;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

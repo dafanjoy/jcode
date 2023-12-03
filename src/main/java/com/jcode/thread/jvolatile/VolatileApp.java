@@ -1,4 +1,4 @@
-package com.jcode.thread.hhxxvolatile;
+package com.jcode.thread.jvolatile;
 
 public class VolatileApp {
 	//volatile

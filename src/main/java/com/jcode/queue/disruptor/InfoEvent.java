@@ -1,4 +1,4 @@
-package com.jcode.disruptor;
+package com.jcode.queue.disruptor;
 
 import java.io.Serializable;
 
